@@ -1,0 +1,34 @@
+# other packages
+anaconda2/*
+cifar10_cnn.py
+gputest.lua
+NVIDIA_CUDA-7.5_Samples/*
+torch/*
+
+# hidden
+.*
+!/.gitignore
+
+# caffe not relevant
+caffe/build/*
+caffe/distribute/*
+caffe/Makefile*
+caffe/python/*
+caffe.cloc
+caffe/docs/*
+caffe/*.md
+caffe/data/*
+caffe/examples/*
+caffe/LICENSE
+caffe/include/*
+caffe/matlab/*
+caffe/cmake/*
+caffe/CMakeLists.txt
+caffe/tmp
+caffe/scripts/*
+caffe/src/*
+caffe/tools/*
+!/caffe/src/caffe/layers/multi_*
+!/caffe/include/caffe/layers/multi*
+!/caffe/examples/pycaffe/layers/multi*
+!/caffe/examples/pycaffe/solver.prototxt
