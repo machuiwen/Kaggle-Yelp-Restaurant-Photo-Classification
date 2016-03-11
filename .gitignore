@@ -1,3 +1,6 @@
+# temporary output
+machuiwen_output.txt
+
 # other packages
 anaconda2/*
 cifar10_cnn.py
