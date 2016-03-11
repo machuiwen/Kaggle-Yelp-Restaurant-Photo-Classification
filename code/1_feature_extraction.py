@@ -79,5 +79,5 @@ train_list = data_root+'split/'+'train_images_100k.txt'
 test_output = data_root+'caffenet_test_image_fc7features.h5'
 test_list = data_root+'split/'+'test_images_100k.txt'
 
-# extract_dataset(test_output, test_list)
+extract_dataset(test_output, test_list)
 

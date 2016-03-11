@@ -7,6 +7,9 @@ data_root = '/mnt/data/'
 train_features_path = data_root+'caffenet_train_image_fc7features.h5'
 train_biz_features_path = data_root+'caffenet_train_biz_fc7features.csv'
 train_list = data_root+'split/'+'train_images_100k.txt'
+test_features_path = data_root+'caffenet_test_image_fc7features.h5'
+test_biz_features_path = data_root+'caffenet_test_biz_fc7features.csv'
+test_list = data_root+'split/'+'test_images_100k.txt'
 
 def compute_biz_features(feat_path, biz_feat_path, filelist_path):
     f_photos = open(filelist_path, 'r')
@@ -19,9 +22,6 @@ def compute_biz_features(feat_path, biz_feat_path, filelist_path):
         biz, l = line.strip().split(',')
         labels[int(biz)] = [int(x) for x in l.split()]
     f_labels.close()
-    # labels = pd.read_csv(data_root+'train.csv').dropna()
-    # labels['labels'] = labels['labels'].apply(lambda x: tuple(sorted(int(t) for t in x.split())))
-    # labels.set_index('business_id', inplace=True)
     biz_ids = set()
     for item in images_list:
         biz_ids.add(item[0])
@@ -38,7 +38,6 @@ def compute_biz_features(feat_path, biz_feat_path, filelist_path):
     count = 0
     for biz in biz_ids:
         label = tuple(labels[biz])
-        # label = labels.loc[biz]['labels']
         image_index = []
         for i, item in enumerate(images_list):
             if item[0] == biz:
@@ -59,4 +58,5 @@ def compute_biz_features(feat_path, biz_feat_path, filelist_path):
     with open(biz_feat_path,'w') as f:  
         df.to_csv(f, index=False)
 
-compute_biz_features(train_features_path, train_biz_features_path, train_list)
+# compute_biz_features(train_features_path, train_biz_features_path, train_list)
+compute_biz_features(test_features_path, test_biz_features_path, test_list)
