@@ -47,7 +47,6 @@ random_state = np.random.RandomState(425)
 # Split data
 X_ptrain, X_pval, y_ptrain, y_pval = train_test_split(X_train, y_ptrain, test_size=.2, \
     random_state = random_state)
-
 # Tuning hyperparameter C for SVM
 # range np.logspace(-3, 2, 6)
 # C = 0.01 best
@@ -68,12 +67,21 @@ for c in [0.01]:
     print "===== computing f1 score on validation set ====="
     f1 = f1_score(y_pval, y_pval_predict, average='micro')
     print "F1 score: ", f1
-    print "Individual Class F1 score: ", f1_score(y_pval, y_pval_predict, average=None)
+    f1_scores = f1_score(y_pval, y_pval_predict, average=None)
+    print "Individual Class F1 score: ", f1_scores
+    print np.sum(np.int64(classifier.predict_proba(X_pval) == 0.5))
+    
 
     if f1 > best_f1:
         best_f1 = f1
         best_c = c
         best_classifier = classifier
+
+print "Best C:", best_c, "Best mean f1 score:", best_f1
+label_array = y_pval
+prediction_array = best_classifier.predict(X_pval)
+print np.mean(f1_score(label_array, prediction_array, average=None))
+np.savez('/home/ubuntu/caffe/tmpdata/SVM_roc.npz', label_array, prediction_array)
 
 # # Data statistics
 # print "===== showing predicting statistics on validation set ====="

@@ -47,7 +47,7 @@ def extract_dataset(output_path, filelist_path):
 
     print "=============== generating file list ================"
     f_photos = open(filelist_path, 'r')
-    images_list = [line.split(' ')[0] for line in f_photos]
+    images_list = [line.strip().split(' ')[0] for line in f_photos]
     f_photos.close()
 
     num_images = len(images_list)
@@ -79,5 +79,9 @@ train_list = data_root+'split/'+'train_images_100k.txt'
 test_output = data_root+'caffenet_test_image_fc7features.h5'
 test_list = data_root+'split/'+'test_images_100k.txt'
 
-extract_dataset(test_output, test_list)
+# extract_dataset(test_output, test_list)
 
+kaggletest_output = data_root+'caffenet_kaggletest_image_fc7features.h5'
+kaggletest_list = data_root+'kaggle_test_images.csv'
+
+extract_dataset(kaggletest_output, kaggletest_list)
