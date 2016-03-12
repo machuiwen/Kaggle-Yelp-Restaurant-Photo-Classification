@@ -12,8 +12,8 @@ import time
 # 0: use kaggle train / test split
 # 1: only use kaggle train for train / test
 # 2: only use 1000 biz for train / test
-mode = 1
-model_name = 'caffenet'
+mode = 0
+model_name = 'vgg'
 n_process = -2
 print "===== ", model_name, " ====="
 
@@ -22,7 +22,7 @@ data_root = '/mnt/data/'
 train_biz_features = data_root + model_name + "_train_biz_fc7features.csv"
 test_biz_features = data_root + model_name + "_test_biz_fc7features.csv"
 kaggle_biz_features = data_root + model_name + "_kaggletest_biz_fc7features.csv"
-submission_file = data_root + "submission_" + model_name + "_fc7.csv"
+submission_file = data_root + "submission_" + model_name + "_fc7_c0.01.csv"
 roc_file = '/home/ubuntu/caffe/tmpdata/SVM_'+model_name+'_roc.npz'
 
 train_df = pd.read_csv(train_biz_features)
@@ -92,7 +92,7 @@ best_f1 = -1
 best_c = None
 best_classifier = None
 best_predict = None
-for c in np.logspace(-3,-1,13):
+for c in [0.01]:
     t = time.time()
     classifier = OneVsRestClassifier(svm.SVC(C=c, kernel='linear', probability=True, \
         random_state=random_state), n_jobs=n_process)

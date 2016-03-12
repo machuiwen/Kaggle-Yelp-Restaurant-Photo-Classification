@@ -9,3 +9,13 @@ Mode: 1
 Model: caffenet
 Best C: 0.01
 Best mean f1: 0.806323321948
+----- Experiment -----
+Mode: 0
+Model: vgg
+Best C: 0.00421696503429
+Best mean f1: 0.82760527691
+----- Experiment -----
+Mode: 0
+Model: vgg
+Best C: 0.01
+Best mean f1: 0.825021748399

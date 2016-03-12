@@ -87,4 +87,4 @@ def kaggletest_biz_features(feat_path, biz_feat_path):
         df.to_csv(f, index=False)
 # compute_biz_features(train_features_path, train_biz_features_path, train_list)
 # compute_biz_features(test_features_path, test_biz_features_path, test_list)
-# kaggletest_biz_features(kaggle_features_path, kaggle_biz_features_path)
+kaggletest_biz_features(kaggle_features_path, kaggle_biz_features_path)

@@ -1,21 +1,33 @@
 caffe_root = '/home/ubuntu/caffe/' 
 data_root = '/mnt/data/'
 stdout = '/home/ubuntu/machuiwen_output.txt'
-layer_name = 'fc7'
-model_name = 'vgg'
-batch_sz = 256
-feature_dim = 4096
 
+model_name = 'google'
 if model_name == 'caffenet':
     prototxt_path = caffe_root + 'models/bvlc_reference_caffenet/deploy.prototxt'
     model_path = caffe_root + 'models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel'
     mean_path = caffe_root + 'python/caffe/imagenet/ilsvrc_2012_mean.npy'
     input_width, input_height = 227, 227
+    batch_sz = 512
+    feature_dim = 4096
+    layer_name = 'fc7'
 elif model_name == 'vgg':
     prototxt_path = caffe_root + 'models/VGG/VGG_CNN_S_deploy.prototxt'
     model_path = caffe_root + 'models/VGG/VGG_CNN_S.caffemodel'
     mean_path = caffe_root + 'models/VGG/VGG_mean.npy'
     input_width, input_height = 224, 224
+    batch_sz = 256
+    feature_dim = 4096
+    layer_name = 'fc7'
+elif model_name == 'google':
+    prototxt_path = caffe_root + 'models/bvlc_googlenet/deploy.prototxt'
+    model_path = caffe_root + 'models/bvlc_googlenet/bvlc_googlenet.caffemodel'
+    mean_path = caffe_root + 'python/caffe/imagenet/ilsvrc_2012_mean.npy' # we only use channel avg - [104, 117, 123]
+    input_width, input_height = 224, 224
+    batch_sz = 118
+    feature_dim = 1024
+    layer_name = 'pool5/7x7_s1'
+
 
 import h5py
 import numpy as np
@@ -49,8 +61,8 @@ def extract_features(images, layer='fc7'):
     net.blobs['data'].reshape(num_images,3,input_width,input_height)
     net.blobs['data'].data[...] = map(lambda x: transformer.preprocess('data',caffe.io.load_image(x)), images)
     out = net.forward()
-
-    return net.blobs[layer].data
+    feature = net.blobs[layer].data
+    return feature.reshape(feature.shape[0:2])
 
 def extract_dataset(output_path, filelist_path):
     print "=============== setting output file ================"
@@ -121,14 +133,14 @@ def extract_kaggletest(output_path, filelist_path):
 train_output = data_root+model_name+'_train_image_fc7features.h5'
 train_list = data_root+'split/'+'train_images_100k.txt'
 
-# extract_dataset(train_output, train_list)
+extract_dataset(train_output, train_list)
 
 ## Extract features from test image
 
 test_output = data_root+model_name+'_test_image_fc7features.h5'
 test_list = data_root+'split/'+'test_images_100k.txt'
 
-# extract_dataset(test_output, test_list)
+extract_dataset(test_output, test_list)
 
 kaggletest_output = data_root+model_name+'_kaggletest_image_fc7features.h5'
 kaggletest_list = data_root+'test_photo_to_biz.csv'
