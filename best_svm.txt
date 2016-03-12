@@ -1,0 +1,11 @@
+----- Experiment -----
+Mode: 1
+Model: vgg
+Best C: 0.01 
+Best mean f1: 0.818642662438
+
+----- Experiment -----
+Mode: 1
+Model: caffenet
+Best C: 0.01
+Best mean f1: 0.806323321948

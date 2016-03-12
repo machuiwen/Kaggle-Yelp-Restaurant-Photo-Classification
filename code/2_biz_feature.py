@@ -4,14 +4,15 @@ import h5py
 import time
 
 data_root = '/mnt/data/'
-train_features_path = data_root+'caffenet_train_image_fc7features.h5'
-train_biz_features_path = data_root+'caffenet_train_biz_fc7features.csv'
+model_name = 'vgg'
+train_features_path = data_root+model_name+'_train_image_fc7features.h5'
+train_biz_features_path = data_root+model_name+'_train_biz_fc7features.csv'
 train_list = data_root+'split/'+'train_images_100k.txt'
-test_features_path = data_root+'caffenet_test_image_fc7features.h5'
-test_biz_features_path = data_root+'caffenet_test_biz_fc7features.csv'
+test_features_path = data_root+model_name+'_test_image_fc7features.h5'
+test_biz_features_path = data_root+model_name+'_test_biz_fc7features.csv'
 test_list = data_root+'split/'+'test_images_100k.txt'
-kaggle_features_path = data_root+'caffenet_kaggletest_image_fc7features.h5'
-kaggle_biz_features_path = data_root+'caffenet_kaggletest_biz_fc7features.csv'
+kaggle_features_path = data_root+model_name+'_kaggletest_image_fc7features.h5'
+kaggle_biz_features_path = data_root+model_name+'_kaggletest_biz_fc7features.csv'
 
 def compute_biz_features(feat_path, biz_feat_path, filelist_path):
     f_photos = open(filelist_path, 'r')
@@ -86,4 +87,4 @@ def kaggletest_biz_features(feat_path, biz_feat_path):
         df.to_csv(f, index=False)
 # compute_biz_features(train_features_path, train_biz_features_path, train_list)
 # compute_biz_features(test_features_path, test_biz_features_path, test_list)
-kaggletest_biz_features(kaggle_features_path, kaggle_biz_features_path)
+# kaggletest_biz_features(kaggle_features_path, kaggle_biz_features_path)

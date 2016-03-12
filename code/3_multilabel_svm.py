@@ -12,16 +12,18 @@ import time
 # 0: use kaggle train / test split
 # 1: only use kaggle train for train / test
 # 2: only use 1000 biz for train / test
-mode = 0
+mode = 1
+model_name = 'caffenet'
+n_process = -2
+print "===== ", model_name, " ====="
 
 ## Load Data
 data_root = '/mnt/data/'
-n_process = -2
-train_biz_features = data_root + "caffenet_train_biz_fc7features.csv"
-test_biz_features = data_root + "caffenet_test_biz_fc7features.csv"
-kaggle_biz_features = data_root + "caffenet_kaggletest_biz_fc7features.csv"
-submission_file = data_root + "submission_caffenet_fc7_2.csv"
-roc_file = '/home/ubuntu/caffe/tmpdata/SVM_roc.npz'
+train_biz_features = data_root + model_name + "_train_biz_fc7features.csv"
+test_biz_features = data_root + model_name + "_test_biz_fc7features.csv"
+kaggle_biz_features = data_root + model_name + "_kaggletest_biz_fc7features.csv"
+submission_file = data_root + "submission_" + model_name + "_fc7.csv"
+roc_file = '/home/ubuntu/caffe/tmpdata/SVM_'+model_name+'_roc.npz'
 
 train_df = pd.read_csv(train_biz_features)
 X_train = train_df['feature vector'].values
@@ -85,12 +87,12 @@ X_ptrain, X_pval, y_ptrain, y_pval = train_test_split(X_train, y_ptrain, test_si
     random_state = random_state)
 # Tuning hyperparameter C for SVM
 # range np.logspace(-3, 2, 6)
-# C = 0.01 best
+# caffenet: C = 0.01 best
 best_f1 = -1
 best_c = None
 best_classifier = None
 best_predict = None
-for c in np.logspace(-3,-1,9):
+for c in np.logspace(-3,-1,13):
     t = time.time()
     classifier = OneVsRestClassifier(svm.SVC(C=c, kernel='linear', probability=True, \
         random_state=random_state), n_jobs=n_process)
@@ -114,9 +116,12 @@ for c in np.logspace(-3,-1,9):
         best_predict = y_pval_predict
 
 print "Best C:", best_c, "Best mean f1 score:", best_f1
-#label_array = y_pval
-#prediction_array = best_classifier.predict(X_pval)
-#np.savez('/home/ubuntu/caffe/tmpdata/SVM_roc.npz', label_array, prediction_array)
+with open("/home/ubuntu/best_svm.txt", 'a') as result:
+    result.write("----- Experiment -----\n")
+    result.write("Mode: " + str(mode) + '\n')
+    result.write("Model: " + model_name + '\n')
+    result.write("Best C: " + str(best_c) + '\n')
+    result.write("Best mean f1: " + str(best_f1) + '\n')
 
 # Data statistics
 print "===== showing predicting statistics on validation set ====="
@@ -131,7 +136,7 @@ print statistics
 
 t = time.time()
 y_train = mlb.fit_transform(y_train)
-if y_test != None:
+if y_test is not None:
     y_test = mlb.fit_transform(y_test)
 classifier = OneVsRestClassifier(svm.SVC(C=best_c, kernel='linear', probability=True, \
     random_state=random_state), n_jobs=n_process)
@@ -150,13 +155,15 @@ pd.options.display.float_format = '{:.0f}%'.format
 statistics.loc["biz ratio"] = statistics.loc["biz count"]*100/len(y_test_predict) 
 print statistics
 
-if y_test:
+if y_test is not None:
     print "===== computing f1 score on test set ====="
     f1_scores = f1_score(y_test, y_test_predict, average=None)
     f1 = np.mean(f1_scores)
     print "##### F1 score: ", f1
     print "##### Individual Class F1 score: ", f1_scores
     # Save ouput
+    with open("/home/ubuntu/best_svm.txt", 'a') as result:
+        result.write('Testset f1: ' + str(f1) + '\n')
     label_array = y_test
     prediction_array = classifier.predict_proba(X_test)
     np.savez(roc_file, label_array, prediction_array)
