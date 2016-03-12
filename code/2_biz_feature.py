@@ -12,7 +12,6 @@ test_biz_features_path = data_root+'caffenet_test_biz_fc7features.csv'
 test_list = data_root+'split/'+'test_images_100k.txt'
 kaggle_features_path = data_root+'caffenet_kaggletest_image_fc7features.h5'
 kaggle_biz_features_path = data_root+'caffenet_kaggletest_biz_fc7features.csv'
-kaggle_list = data_root+'kaggle_test_images.csv'
 
 def compute_biz_features(feat_path, biz_feat_path, filelist_path):
     f_photos = open(filelist_path, 'r')
@@ -46,10 +45,6 @@ def compute_biz_features(feat_path, biz_feat_path, filelist_path):
             if item[0] == biz:
                 image_index.append(i)
         folder = data_root+'train_photos/'
-        
-        # sanity check
-        if len(image_index) == 0:
-            print "***** no image for biz", biz, " *****"
         features = train_image_features[image_index]
         mean_feature = list(np.mean(features,axis=0))
 
@@ -61,7 +56,7 @@ def compute_biz_features(feat_path, biz_feat_path, filelist_path):
     with open(biz_feat_path,'w') as f:  
         df.to_csv(f, index=False)
 
-def kaggletest_biz_features(feat_path, biz_feat_path, filelist_path):
+def kaggletest_biz_features(feat_path, biz_feat_path):
     test_photo_to_biz = pd.read_csv(data_root+'test_photo_to_biz.csv')
     biz_ids = test_photo_to_biz['business_id'].unique()
     ## Load image features
@@ -79,9 +74,6 @@ def kaggletest_biz_features(feat_path, biz_feat_path, filelist_path):
         image_ids = test_photo_to_biz[test_photo_to_biz['business_id']==biz]['photo_id'].tolist()  
         image_index = [image_filenames.index(str(x)) for x in image_ids]         
         folder = data_root+'test_photos/'   
-        # sanity check
-        if len(image_index) == 0:
-            print "***** no image for biz", biz, " *****"         
         features = image_features[image_index]
         mean_feature =list(np.mean(features,axis=0))
 
@@ -91,7 +83,7 @@ def kaggletest_biz_features(feat_path, biz_feat_path, filelist_path):
             print "===== Buisness processed: ", count, "Time passed: ", "{0:.1f}".format(time.time()-t), "sec", " ====="
    
     with open(biz_feat_path,'w') as f:
-    df.to_csv(f, index=False)
+        df.to_csv(f, index=False)
 # compute_biz_features(train_features_path, train_biz_features_path, train_list)
 # compute_biz_features(test_features_path, test_biz_features_path, test_list)
-kaggletest_biz_features(kaggle_features_path, kaggle_biz_features_path, kaggle_list)
+kaggletest_biz_features(kaggle_features_path, kaggle_biz_features_path)
