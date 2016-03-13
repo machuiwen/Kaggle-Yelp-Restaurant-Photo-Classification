@@ -1,0 +1,17 @@
+----- Experiment -----
+Mode: 1
+Model: google
+Best C: 10.0
+Best mean f1: 0.818522951135
+Testset f1: 0.821119058345
+----- Experiment -----
+Mode: 1
+Model: google
+Best C: 7.19685673001
+Best mean f1: 0.818691192816
+Testset f1: 0.818566878291
+----- Experiment -----
+Mode: 0
+Model: google
+Best C: 19.9526231497
+Best mean f1: 0.823720314496

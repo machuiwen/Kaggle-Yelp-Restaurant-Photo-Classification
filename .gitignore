@@ -1,6 +1,7 @@
 # temporary output
 *.txt
 !/best_svm.txt
+!/best_rbf_svm.txt
 
 # other packages
 anaconda2/*
