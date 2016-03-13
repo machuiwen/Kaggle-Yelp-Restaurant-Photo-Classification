@@ -1,5 +1,6 @@
 # temporary output
-machuiwen_output.txt
+*.txt
+!/best_svm.txt
 
 # other packages
 anaconda2/*

@@ -4,7 +4,7 @@ import h5py
 import time
 
 data_root = '/mnt/data/'
-model_name = 'vgg'
+model_name = 'google'
 train_features_path = data_root+model_name+'_train_image_fc7features.h5'
 train_biz_features_path = data_root+model_name+'_train_biz_fc7features.csv'
 train_list = data_root+'split/'+'train_images_100k.txt'
@@ -85,6 +85,6 @@ def kaggletest_biz_features(feat_path, biz_feat_path):
    
     with open(biz_feat_path,'w') as f:
         df.to_csv(f, index=False)
-# compute_biz_features(train_features_path, train_biz_features_path, train_list)
-# compute_biz_features(test_features_path, test_biz_features_path, test_list)
+compute_biz_features(train_features_path, train_biz_features_path, train_list)
+compute_biz_features(test_features_path, test_biz_features_path, test_list)
 kaggletest_biz_features(kaggle_features_path, kaggle_biz_features_path)

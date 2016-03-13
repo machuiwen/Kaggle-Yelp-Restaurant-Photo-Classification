@@ -22,8 +22,8 @@ data_root = '/mnt/data/'
 train_biz_features = data_root + model_name + "_train_biz_fc7features.csv"
 test_biz_features = data_root + model_name + "_test_biz_fc7features.csv"
 kaggle_biz_features = data_root + model_name + "_kaggletest_biz_fc7features.csv"
-submission_file = data_root + "submission_" + model_name + "_fc7.csv"
-roc_file = '/home/ubuntu/caffe/tmpdata/SVM_'+model_name+'_roc.npz'
+submission_file = data_root + "submission_" + model_name + "_fc7_rbf.csv"
+roc_file = '/home/ubuntu/caffe/tmpdata/RBFSVM_'+model_name+'_roc.npz'
 
 train_df = pd.read_csv(train_biz_features)
 X_train = train_df['feature vector'].values
@@ -92,9 +92,9 @@ best_f1 = -1
 best_c = None
 best_classifier = None
 best_predict = None
-for c in np.logspace(-3,-1,15):
+for c in np.logspace(0,2,21):
     t = time.time()
-    classifier = OneVsRestClassifier(svm.SVC(C=c, kernel='linear', probability=True, \
+    classifier = OneVsRestClassifier(svm.SVC(C=c, kernel='rbf', probability=True, \
         random_state=random_state), n_jobs=n_process)
     print "===== training svm for C =", c, " ====="
     classifier.fit(X_ptrain, y_ptrain)
@@ -116,7 +116,7 @@ for c in np.logspace(-3,-1,15):
         best_predict = y_pval_predict
 
 print "Best C:", best_c, "Best mean f1 score:", best_f1
-with open("/home/ubuntu/best_svm.txt", 'a') as result:
+with open("/home/ubuntu/best_rbf_svm.txt", 'a') as result:
     result.write("----- Experiment -----\n")
     result.write("Mode: " + str(mode) + '\n')
     result.write("Model: " + model_name + '\n')
@@ -138,7 +138,7 @@ t = time.time()
 y_train = mlb.fit_transform(y_train)
 if y_test is not None:
     y_test = mlb.fit_transform(y_test)
-classifier = OneVsRestClassifier(svm.SVC(C=best_c, kernel='linear', probability=True, \
+classifier = OneVsRestClassifier(svm.SVC(C=best_c, kernel='rbf', probability=True, \
     random_state=random_state), n_jobs=n_process)
 
 print "===== training svm on all training data ====="
@@ -162,7 +162,7 @@ if y_test is not None:
     print "##### F1 score: ", f1
     print "##### Individual Class F1 score: ", f1_scores
     # Save ouput
-    with open("/home/ubuntu/best_svm.txt", 'a') as result:
+    with open("/home/ubuntu/best_rbf_svm.txt", 'a') as result:
         result.write('Testset f1: ' + str(f1) + '\n')
     label_array = y_test
     prediction_array = classifier.predict_proba(X_test)
